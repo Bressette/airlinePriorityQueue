@@ -1,6 +1,6 @@
 #include "stdio.h"
 #include "stdlib.h"
-
+#include "string.h"
 
 struct passenger
 {
@@ -11,22 +11,51 @@ struct passenger
     int priorityNum;
 };
 
-void readFile()
+void parseFile(struct passenger airline[])
 {
-    char str[10000];
+    int line_index = 0;
+    char str[100];
     FILE * file;
     file = fopen("customers.txt", "r");
-    if(file)
+    char *subString;
+
+
+    while(fgets(str, 100, file)!=NULL)
     {
-        while(fscanf(file, "%s", str)!=EOF)
-            printf("%s\n", str);
-        fclose(file);
+        subString = strtok(str, "\t");
+        printf("Printing substring %s\n", subString);
+        strcpy(airline[line_index].name, subString);
+
+        subString = strtok(NULL, str);
+        strtok(subString, "\t");
+        sscanf(subString, "%d", &airline[line_index].mileage);
+        printf("Printing substring %s\n", subString);
+
+        subString = strtok(NULL, str);
+        strtok(subString, "\t");
+        sscanf(subString, "%d", &airline[line_index].years);
+        printf("Printing substring %s\n", subString);
+
+        subString = strtok(NULL, str);
+        strtok(subString, "\t");
+        sscanf(subString, "%d", &airline[line_index].sequence);
+        printf("Printing substring %s\n", subString);
+
+        line_index++;
     }
+
+
+
+
+
+    fclose(file);
 }
 
 
 int main()
 {
-    readFile();
+    struct passenger airline[20];
+    parseFile(airline);
+    printf("first mileage is %d", airline[0].mileage);
     return 0;
 }
