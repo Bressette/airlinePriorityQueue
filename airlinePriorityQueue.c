@@ -51,11 +51,29 @@ void parseFile(struct passenger airline[])
     fclose(file);
 }
 
+printPassData(struct passenger airline[], int numPassengers)
+{
+    for(int i = 0; i < numPassengers; i++)
+    {
+        printf("%s\t%d\t%d\t%d\t%d\n", airline[i].name, airline[i].mileage, airline[i].years, airline[i].sequence, airline[i].priorityNum);
+    }
+}
+
+genPriorityNum(struct passenger airline[], int numPassengers)
+{
+    for(int i = 0; i < numPassengers; i++)
+    {
+        airline[i].priorityNum = (airline[i].mileage/1000) + airline[i].years - airline[i].sequence;
+    }
+}
 
 int main()
 {
-    struct passenger airline[20];
+    int numPassengers = 15;
+    struct passenger airline[numPassengers];
     parseFile(airline);
+    genPriorityNum(airline, numPassengers);
+    printPassData(airline, numPassengers);
     printf("first mileage is %d", airline[0].mileage);
     return 0;
 }
