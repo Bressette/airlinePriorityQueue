@@ -9,57 +9,51 @@ struct passenger
     int years;
     int sequence;
     int priorityNum;
-    int curNumEle;
-    int heapSize;
-};
-
-struct maxHeap
-{
-    struct passenger *airline;
-    int curNumEle;
-    int heapSize;
 };
 
 
-void heapify(struct maxHeap heap, int curIndex)
+void heapify(struct passenger airline[], int size, int rootIndex)
 {
-    int largest = curIndex;
-    int left = 2*curIndex + 1;
-    int right = 2*curIndex + 2;
+    int largest = rootIndex;
+    int left = rootIndex*2 + 1;
+    int right = rootIndex*2 + 2;
 
-    if(left < heap.curNumEle && heap.airline[left].priorityNum > heap.airline[largest].priorityNum)
-        largest = left;
-    if(right < heap.curNumEle && heap.airline[right].priorityNum > heap.airline[largest].priorityNum)
-        largest = right;
-    if(largest != curIndex)
+    if(left < size && airline[left].priorityNum < airline[largest].priorityNum)
     {
-        struct passenger temp = heap.airline[curIndex];
-        heap.airline[curIndex] = heap.airline[largest];
-        heap.airline[largest] = temp;
+        largest = left;
+    }
 
-        heapify(heap, largest);
+    if(right < size && airline[right].priorityNum < airline[largest].priorityNum)
+    {
+        largest = right;
+    }
+
+    if(largest != rootIndex)
+    {
+        struct passenger temp = airline[largest];
+        airline[largest] = airline[rootIndex];
+        airline[rootIndex] = temp;
+        heapify(airline, size, largest);
     }
 }
 
-struct maxHeap insertHeap(struct maxHeap heap, struct passenger airlineData[])
+
+//Build a min heap from current array
+//Replace the root with the last item in the array
+//Decrease the size of the heap by one
+//Repeat while size of heap is greater than one
+void heapSort(struct passenger airline[], int size)
 {
-    for(int j = 0; j < heap.heapSize; j++)
-    {
-    if(heap.heapSize == heap.curNumEle)
-    {
-        printf("The heap is full\n");
-        return heap;
-    }
+    for(int i = size / 2 - 1; i >= 0; i--)
+        heapify(airline, size, i);
 
-    else
+    for(int i = size - 1; i >= 0; i--)
     {
-        heap.airline[heap.curNumEle] = airlineData[heap.curNumEle];
-        heap.curNumEle++;
+        struct passenger temp = airline[0];
+        airline[0] = airline[i];
+        airline[i] = temp;
 
-        for(int i = heap.curNumEle/2-1; i >= 0; i--)
-            heapify(heap, i);
-        return heap;
-    }
+        heapify(airline, i, 0);
     }
 }
 
@@ -77,23 +71,19 @@ void parseFile(struct passenger airline[])
     while(fgets(str, 100, file)!=NULL)
     {
         subString = strtok(str, "\t");
-        printf("Printing substring %s\n", subString);
         strcpy(airline[line_index].name, subString);
 
         subString = strtok(NULL, str);
         strtok(subString, "\t");
         sscanf(subString, "%d", &airline[line_index].mileage);
-        printf("Printing substring %s\n", subString);
 
         subString = strtok(NULL, str);
         strtok(subString, "\t");
         sscanf(subString, "%d", &airline[line_index].years);
-        printf("Printing substring %s\n", subString);
 
         subString = strtok(NULL, str);
         strtok(subString, "\t");
         sscanf(subString, "%d", &airline[line_index].sequence);
-        printf("Printing substring %s\n", subString);
 
         line_index++;
     }
@@ -101,7 +91,7 @@ void parseFile(struct passenger airline[])
     fclose(file);
 }
 
-printPassData(struct passenger airline[], int numPassengers)
+void printPassData(struct passenger airline[], int numPassengers)
 {
     for(int i = 0; i < numPassengers; i++)
     {
@@ -109,7 +99,7 @@ printPassData(struct passenger airline[], int numPassengers)
     }
 }
 
-genPriorityNum(struct passenger airline[], int numPassengers)
+void genPriorityNum(struct passenger airline[], int numPassengers)
 {
     for(int i = 0; i < numPassengers; i++)
     {
@@ -118,20 +108,23 @@ genPriorityNum(struct passenger airline[], int numPassengers)
 
 }
 
+void printPassPriority(struct passenger airline[], int numPassengers)
+{
+    for(int i = 0; i < numPassengers; i++)
+    {
+        printf("Name: %s -> Priority: %d\n", airline[i].name, airline[i].priorityNum);
+    }
+}
+
+
 int main()
 {
     int numPassengers = 15;
     struct passenger airline[numPassengers];
     parseFile(airline);
     genPriorityNum(airline, numPassengers);
-    printPassData(airline, numPassengers);
-    printf("first mileage is %d", airline[0].mileage);
-
-    struct maxHeap priorityHeap;
-    priorityHeap.heapSize = numPassengers;
-    priorityHeap.airline = malloc(sizeof(struct passenger)*(priorityHeap.heapSize));
-    priorityHeap.curNumEle = 0;
-    insertHeap(priorityHeap, airline);
+    heapSort(airline, numPassengers);
+    printPassPriority(airline, numPassengers);
 
     return 0;
 }
