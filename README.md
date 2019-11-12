@@ -5,3 +5,5 @@ priority number that is computed by (Total mileage / 1000) + years - sequence nu
 is then printed after the passengers are ordered into a min heap and sorted using heap sort.
 ## Data used to generate priority queue
 ![customers table](https://github.com/Bressette/airlinePriorityQueue/blob/master/images/passenger%20table.PNG)
+## Program Output
+![Program Output](https://github.com/Bressette/airlinePriorityQueue/blob/master/images/Project%202%20Output.PNG)
