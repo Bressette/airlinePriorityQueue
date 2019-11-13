@@ -80,28 +80,31 @@ void parseFile(struct passenger airline[])
     //loop that iterates through the file line by line storing data fields into passenger
     while(fgets(str, 100, file)!=NULL)
     {
+        if(line_index > 0)
+        {
         //copies the name data field into passenger.name
         subString = strtok(str, "\t");
-        strcpy(airline[line_index].name, subString);
+        strcpy(airline[line_index-1].name, subString);
 
         //stores mileage field as a string
         subString = strtok(NULL, str);
         strtok(subString, "\t");
         //converts mileage string into an integer
-        sscanf(subString, "%d", &airline[line_index].mileage);
+        sscanf(subString, "%d", &airline[line_index-1].mileage);
 
         //stores years field as a string
         subString = strtok(NULL, str);
         strtok(subString, "\t");
         //converts years string into an integer
-        sscanf(subString, "%d", &airline[line_index].years);
+        sscanf(subString, "%d", &airline[line_index-1].years);
 
         //stores sequence field as a string
         subString = strtok(NULL, str);
         strtok(subString, "\t");
         //converts sequence string into an integer
-        sscanf(subString, "%d", &airline[line_index].sequence);
+        sscanf(subString, "%d", &airline[line_index-1].sequence);
 
+        }
         //increments line_index so that the next line can be processed
         line_index++;
     }
