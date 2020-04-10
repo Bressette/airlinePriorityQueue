@@ -1,4 +1,4 @@
-# airlinePriorityQueue
+# AirlinePriorityQueue
 
 C program that reads in passenger data from a .txt file, stores the passengers in a struct that is ordered based on a
 priority number that is computed by (Total mileage / 1000) + years - sequence number. The priority queue
